@@ -9,6 +9,15 @@ services:
       environment:
          eureka.instance.hostname: mc-address-eureka-server
          
+   mc-api-gateway:
+      build: ../mc-api-gateway
+      image: mc-api-gateway
+      ports:
+         - "8079:8079"
+      environment:
+         WAIT_HOSTS: mc-address-eureka-server:8761
+         eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
+         
    mc-customer-address:
       build: ../mc-customer-address
       image: mc-customer-address
