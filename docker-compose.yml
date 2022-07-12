@@ -2,45 +2,61 @@ version: "3"
 
 services:
    mc-address-eureka-server:
-      build: .
-      image: mc-address-eureka-server
-      ports:
-         - "8761:8761"
-      environment:
-         eureka.instance.hostname: mc-address-eureka-server
+     build: .
+     image: mc-address-eureka-server
+     ports:
+       - "8761:8761"
+     environment:
+       eureka.instance.hostname: mc-address-eureka-server
          
    mc-api-gateway:
-      build: ../mc-api-gateway
-      image: mc-api-gateway
-      ports:
-         - "8079:8079"
-      environment:
-         WAIT_HOSTS: mc-address-eureka-server:8761
-         eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
+     build: ../mc-api-gateway
+     image: mc-api-gateway
+     ports:
+       - "8079:8079"
+     environment:
+       WAIT_HOSTS: mc-address-eureka-server:8761
+       eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
          
    mc-customer-address:
-      build: ../mc-customer-address
-      image: mc-customer-address
-      ports:
-         - "8080:8080"
-      environment:
-         WAIT_HOSTS: mc-address-eureka-server:8761
-         eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
+     build: ../mc-customer-address
+     image: mc-customer-address
+     ports:
+       - "8080:8080"
+     environment:
+       WAIT_HOSTS: mc-address-eureka-server:8761
+       eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
          
    mc-zip-code-validator:
-      build: ../mc-zip-code-validator
-      image: mc-zip-code-validator
-      ports:
-         - "8081:8081"
-      environment:
-         WAIT_HOSTS: mc-address-eureka-server:8761
-         eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
+     build: ../mc-zip-code-validator
+     image: mc-zip-code-validator
+     ports:
+       - "8081:8081"
+     environment:
+       WAIT_HOSTS: mc-address-eureka-server:8761
+       eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
          
    mc-user-service:
-      build: ../mc-user-service
-      image: mc-user-service
-      ports:
-         - "8082:8082"
-      environment:
-         WAIT_HOSTS: mc-address-eureka-server:8761
-         eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
+     build: ../mc-user-service
+     image: mc-user-service
+     ports:
+       - "8082:8082"
+     environment:
+       WAIT_HOSTS: mc-address-eureka-server:8761
+       eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
+   
+   keycloak:
+     image: quay.io/keycloak/keycloak:18.0.2
+     environment:
+       KEYCLOAK_ADMIN: admin
+       KEYCLOAK_ADMIN_PASSWORD: admin
+       KEYCLOAK_LOGLEVEL: INFO
+       ROOT_LOGLEVEL: INFO
+       KEYCLOAK_HTTP_PORT: 8083
+       KEYCLOAK_HTTPS_PORT: 8084
+       WAIT_HOSTS: mc-address-eureka-server:8761
+       eureka.client.serviceUrl.defaultZone: http://mc-address-eureka-server:8761/eureka
+     ports:
+       - "8083:8083"
+     command:
+       - start-dev
